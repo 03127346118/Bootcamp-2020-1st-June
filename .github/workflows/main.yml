@@ -22,12 +22,13 @@ jobs:
     - uses: actions/checkout@v2
 
     # Runs a single command using the runners shell
-    - name: Installing Nodea
+    - name: Installing Node
       run: actions/setup-node@v2-beta
-
+         with: 
+         node-version : 12
     # Runs a set of commands using the runners shell
     - name: Installing Surge
       run: npm install --global surge
-          - name:  Surge
-            - run :
+          - name: surge
+             run :
               surge ./devops2020.surge.sh --token ${{ secrets.YAML}}
