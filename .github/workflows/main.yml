@@ -1,18 +1,8 @@
-# This is a basic workflow to help you get started with Actions
+name: Deploy Website
 
-name: CI
+on: [push]
 
-# Controls when the action will run. Triggers the workflow on push or pull request
-# events but only for the master branch
-on:
-  push:
-    branches: [ master ]
-
-
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
- 
   build:
     runs-on: ubuntu-latest
     name: Deploying to surge
@@ -22,9 +12,13 @@ jobs:
         uses: actions/setup-node@v2-beta
         with:
           node-version: 12
-    # Runs a set of commands using the runners shell
-    - name: Install Surge
-      run: npm install --g surge
-          - name: surge
-             run :
-              surge ./devops2020.surge.sh --token ${{ secrets.YAML}}
+      - name: Prepare for Yarn Installation
+        run: curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add - echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+      - name: install yarn
+        run: sudo apt update && sudo apt install yarn
+      - name: Build React App
+        run: yarn build
+      - name: Install Surge
+        run: npm install -g surge
+      - name: Run surge
+        run: surge ./build bootcamp_react_ziakhan.surge.sh --token ${{ secrets.SURGE_TOKEN }}
